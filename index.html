@@ -80,11 +80,18 @@
         </div>
     </div>
 
-    <!-- ============ PANTALLA 4: CORAZÓN 3D ============ -->
-    <div id="corazonPantalla" class="pantalla">
-        <canvas id="corazonCanvas"></canvas>
-        <h1 class="titulo-final">Te Amo 💙</h1>
+  <!-- ============ PANTALLA 4: CORAZÓN 3D Y FOTOS ============ -->
+<div id="corazonPantalla" class="pantalla">
+    <canvas id="corazonCanvas"></canvas>
+    <h1 class="titulo-final" id="tituloFinal">Te Amo 💙</h1>
+
+    <!-- Fotos que aparecerán tras la dispersión -->
+    <div class="fotos-finales" id="fotosFinales">
+        <img src="fotos/foto1.jpg" alt="foto1" class="foto-final" onerror="this.style.display='none'">
+        <img src="fotos/foto2.jpg" alt="foto2" class="foto-final" onerror="this.style.display='none'">
+        <img src="fotos/foto3.jpg" alt="foto3" class="foto-final" onerror="this.style.display='none'">
     </div>
+</div>
 
     <script src="script.js"></script>
 </body>
