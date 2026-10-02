@@ -357,3 +357,64 @@ body {
     .boton-principal { font-size: 1rem; padding: 12px 28px; }
     .marco-carta { padding: 20px 15px; }
 }
+/* ============ FOTOS FINALES TRAS EL CORAZÓN ============ */
+.fotos-finales {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+    padding: 20px;
+    z-index: 3;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 1.5s ease-in-out;
+}
+
+.fotos-finales.visible {
+    opacity: 1;
+}
+
+.foto-final {
+    width: 220px;
+    height: 220px;
+    object-fit: cover;
+    border: 8px solid #fffaf0;
+    outline: 3px solid #ffd700;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(255, 105, 180, 0.6);
+    opacity: 0;
+    transform: scale(0.3) rotate(-10deg);
+    transition: opacity 1.2s ease-out, transform 1.2s ease-out;
+}
+
+.foto-final.visible {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+}
+
+.foto-final:nth-child(1) { transition-delay: 0.2s; }
+.foto-final:nth-child(2) { transition-delay: 0.5s; }
+.foto-final:nth-child(3) { transition-delay: 0.8s; }
+
+.foto-final:hover {
+    transform: scale(1.05) rotate(2deg);
+    box-shadow: 0 15px 40px rgba(255, 105, 180, 0.9);
+}
+
+/* En celulares más pequeños */
+@media (max-width: 600px) {
+    .foto-final {
+        width: 120px;
+        height: 120px;
+        border: 5px solid #fffaf0;
+    }
+    .fotos-finales {
+        gap: 15px;
+    }
+}
