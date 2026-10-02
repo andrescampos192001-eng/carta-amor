@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carta Virtual de Amor 💙</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Fondo con estrellas y corazones flotantes -->
+    <canvas id="fondoCanvas"></canvas>
+
+    <!-- ============ PANTALLA 1: PORTADA ============ -->
+    <div id="portada" class="pantalla activa">
+        <div class="fotos-portada">
+            <img src="fotos/foto1.jpg" alt="foto1" class="foto-marco" onerror="this.style.display='none'">
+            <img src="fotos/foto2.jpg" alt="foto2" class="foto-marco" onerror="this.style.display='none'">
+            <img src="fotos/foto3.jpg" alt="foto3" class="foto-marco" onerror="this.style.display='none'">
+        </div>
+
+        <h1 class="titulo-portada">¿Te digo algo?</h1>
+        <p class="subtitulo">Un mensaje escrito desde el corazón...</p>
+
+        <div class="linea-decorativa">
+            <span></span>💛<span></span>
+        </div>
+
+        <!-- Sobre -->
+        <div class="sobre" id="sobre">
+            <div class="sobre-cuerpo"></div>
+            <div class="sobre-solapa"></div>
+            <div class="sello-corazon">💗</div>
+        </div>
+
+        <button id="btnAbrir" class="boton-principal">Abrir carta 💌</button>
+    </div>
+
+    <!-- ============ PANTALLA 2: ANIMACIÓN DE APERTURA ============ -->
+    <div id="animacion" class="pantalla">
+        <div class="sobre-abriendo" id="sobreAnimado">
+            <div class="carta-saliendo" id="cartaSaliendo">
+                <div class="linea-carta"></div>
+                <div class="linea-carta"></div>
+                <div class="linea-carta"></div>
+                <div class="linea-carta"></div>
+                <div class="linea-carta"></div>
+            </div>
+            <div class="sobre-cuerpo-anim"></div>
+            <div class="sobre-solapa-anim" id="solapaAnim"></div>
+        </div>
+        <p class="aviso-anim" id="avisoAnim">Preparando tu carta...</p>
+    </div>
+
+    <!-- ============ PANTALLA 3: CARTA ============ -->
+    <div id="carta" class="pantalla">
+        <div class="marco-carta">
+            <h1 class="titulo-carta">¿TE DIGO ALGO?</h1>
+            <div class="linea-decorativa">
+                <span></span>💛<span></span>
+            </div>
+
+            <div class="cuerpo-carta">
+                <p>me siento afortunado de tenerte y orgulloso de lo que eres,</p>
+                <p>sé que muchas cosas de mi no son perfectas, pero muchas cosas de ti</p>
+                <p>hacen que mi vida sea perfecta.</p>
+                <p>Tal vez existan algunas cosas que quiero hacer contigo y aún no he podido,</p>
+                <p>¿pero sabes algo? En mi corazón hay muchas cosas grandes para ti,</p>
+                <p>y sé que en algún punto de nuestras vidas podré mostrarte mucho más</p>
+                <p>de lo que te he podido mostrar ahora.</p>
+                <br>
+                <p>Eres una de las cosas más preciadas que tengo y sé que nuestro</p>
+                <p>presente es duro, pero nuestro futuro será brillante.</p>
+                <p>Te amo como nunca antes pensé amar a una persona.</p>
+            </div>
+
+            <p class="firma">— Con todo mi amor 💙</p>
+
+            <button id="btnTeAmo" class="boton-principal">¡TE AMO!</button>
+        </div>
+    </div>
+
+    <!-- ============ PANTALLA 4: CORAZÓN 3D ============ -->
+    <div id="corazonPantalla" class="pantalla">
+        <canvas id="corazonCanvas"></canvas>
+        <h1 class="titulo-final">Te Amo 💙</h1>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
