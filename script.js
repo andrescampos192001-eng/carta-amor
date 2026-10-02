@@ -133,10 +133,14 @@ document.getElementById('btnTeAmo').addEventListener('click', () => {
     iniciarCorazon3D();
 });
 
-// ==================== CORAZÓN 3D ====================
+// ==================== CORAZÓN 3D CON DISPERSIÓN ====================
 let corazonIniciado = false;
 let particulasCorazon = [];
 let anguloRotacion = 0;
+let tiempoInicioCorazon = 0;
+let faseCorazon = "girando"; // "girando" -> "dispersando" -> "fotos"
+const DURACION_CORAZON = 5000; // 5 segundos
+const DURACION_DISPERSION = 2500; // 2.5 segundos para dispersarse
 
 function generarParticulasCorazon(n) {
     const arr = [];
@@ -149,11 +153,17 @@ function generarParticulasCorazon(n) {
         const escala = 0.8 + Math.random() * 0.4;
         x *= escala;
         y *= escala;
-
         x += (Math.random() - 0.5) * 0.6;
         y += (Math.random() - 0.5) * 0.6;
 
-        arr.push({ x, y, z });
+        arr.push({
+            x, y, z,
+            // Dirección de dispersión
+            vx: (Math.random() - 0.5) * 20,
+            vy: (Math.random() - 0.5) * 20,
+            vz: (Math.random() - 0.5) * 20,
+            tamBase: Math.random() * 1.5 + 1.5
+        });
     }
     return arr;
 }
@@ -162,10 +172,15 @@ function iniciarCorazon3D() {
     if (corazonIniciado) return;
     corazonIniciado = true;
     particulasCorazon = generarParticulasCorazon(1800);
+    tiempoInicioCorazon = performance.now();
+    faseCorazon = "girando";
     animarCorazon();
 }
 
 function animarCorazon() {
+    const ahora = performance.now();
+    const tiempoTranscurrido = ahora - tiempoInicioCorazon;
+
     ctxCorazon.clearRect(0, 0, ancho, alto);
 
     // Fondo espacial
@@ -175,7 +190,7 @@ function animarCorazon() {
     ctxCorazon.fillStyle = grad;
     ctxCorazon.fillRect(0, 0, ancho, alto);
 
-    // Estrellas
+    // Estrellas de fondo
     estrellas.forEach(e => {
         const brillo = 120 + 135 * Math.sin(tiempo * 3 + e.fase);
         const r = Math.max(0, Math.min(255, brillo));
@@ -185,6 +200,27 @@ function animarCorazon() {
         ctxCorazon.fill();
     });
 
+    // Lógica de fases
+    if (tiempoTranscurrido > DURACION_CORAZON && faseCorazon === "girando") {
+        faseCorazon = "dispersando";
+        // Ocultar el título "Te Amo"
+        document.getElementById('tituloFinal').style.opacity = '0';
+        document.getElementById('tituloFinal').style.transition = 'opacity 1s';
+    }
+
+    if (faseCorazon === "dispersando" && tiempoTranscurrido > DURACION_CORAZON + DURACION_DISPERSION) {
+        faseCorazon = "fotos";
+        // Mostrar fotos
+        document.getElementById('fotosFinales').classList.add('visible');
+        document.querySelectorAll('.foto-final').forEach(f => f.classList.add('visible'));
+    }
+
+    // Progreso de dispersión (0 a 1)
+    let progresoDisp = 0;
+    if (faseCorazon === "dispersando" || faseCorazon === "fotos") {
+        progresoDisp = Math.min(1, (tiempoTranscurrido - DURACION_CORAZON) / DURACION_DISPERSION);
+    }
+
     // Latido
     const latido = 1 + 0.05 * Math.sin(tiempo * 3);
     const escala = Math.min(ancho, alto) / 60 * latido;
@@ -193,7 +229,7 @@ function animarCorazon() {
 
     anguloRotacion += 0.02;
 
-    // Ordenar por Z (más lejanas primero)
+    // Ordenar por Z
     const ordenadas = [...particulasCorazon].sort((a, b) => {
         const za = a.x * Math.sin(anguloRotacion) + a.z * Math.cos(anguloRotacion);
         const zb = b.x * Math.sin(anguloRotacion) + b.z * Math.cos(anguloRotacion);
@@ -201,18 +237,27 @@ function animarCorazon() {
     });
 
     ordenadas.forEach(p => {
-        const xRot = p.x * Math.cos(anguloRotacion) - p.z * Math.sin(anguloRotacion);
-        const zRot = p.x * Math.sin(anguloRotacion) + p.z * Math.cos(anguloRotacion);
-        const yRot = p.y;
+        let xRot = p.x * Math.cos(anguloRotacion) - p.z * Math.sin(anguloRotacion);
+        let zRot = p.x * Math.sin(anguloRotacion) + p.z * Math.cos(anguloRotacion);
+        let yRot = p.y;
+
+        // Aplicar dispersión: mover cada partícula hacia su dirección con velocidad creciente
+        const factorDisp = progresoDisp * progresoDisp; // ease-in
+        xRot += p.vx * factorDisp * 15;
+        yRot += p.vy * factorDisp * 15;
+        zRot += p.vz * factorDisp * 15;
 
         const factor = 200 / (200 + zRot);
         const px = cx + xRot * escala * factor;
         const py = cy - yRot * escala * factor;
 
-        const tam = Math.max(1, 3 * factor * 0.6);
+        const tam = Math.max(0.5, p.tamBase * factor * 0.8);
         const brillo = Math.floor(150 + 105 * Math.sin(tiempo * 4 + p.x));
 
-        ctxCorazon.fillStyle = `rgb(0,${Math.min(255, brillo)},255)`;
+        // Alpha se reduce con la dispersión
+        const alpha = Math.max(0, 1 - progresoDisp * 0.9);
+
+        ctxCorazon.fillStyle = `rgba(0,${Math.min(255, brillo)},255,${alpha})`;
         ctxCorazon.beginPath();
         ctxCorazon.arc(px, py, tam, 0, Math.PI * 2);
         ctxCorazon.fill();
